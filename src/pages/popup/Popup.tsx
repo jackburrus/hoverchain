@@ -21,12 +21,12 @@ const Popup = () => {
           Edit <code>src/pages/popup/Popup.tsx</code> and save to reload.
         </p>
         <a
-          className="App-link"
+          className="text-red-500"
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: theme === 'light' && '#0281dc', marginBottom: '10px' }}>
-          Learn React!
+          Learn React!!!
         </a>
         <button
           style={{

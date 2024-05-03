@@ -24,8 +24,6 @@ export default function HoverChain() {
     },
   });
 
-  console.log('This is the state of the machine', state);
-
   useEffect(() => {
     const onMouseUp = async (event: MouseEvent) => {
       /** Selection 이벤트 호출을 기다리는 해키한 코드 */
@@ -47,5 +45,5 @@ export default function HoverChain() {
       window.document.removeEventListener('mouseup', onMouseUp);
     };
   }, []);
-  return <h1>Hello</h1>;
+  return <></>;
 }

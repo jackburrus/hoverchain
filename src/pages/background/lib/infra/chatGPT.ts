@@ -1,12 +1,9 @@
-import type {
-  ChatCompletionRequestMessage,
-  CreateChatCompletionRequest,
-} from "openai";
-
+import type { ChatCompletionRequestMessage, CreateChatCompletionRequest } from 'openai';
+import { Network, Alchemy } from 'alchemy-sdk';
 type Error = {
   error: {
     type: string;
-    code: string | "context_length_exceeded";
+    code: string | 'context_length_exceeded';
     message?: string;
   };
 };
@@ -27,7 +24,7 @@ export async function chatGPT({
 
   if (slot.system) {
     messages.push({
-      role: "system",
+      role: 'system',
       content: slot.system,
     });
   }
@@ -35,91 +32,46 @@ export async function chatGPT({
     messages.push(...convertChatsToMessages(chats));
   }
   if (input) {
-    messages.push({ role: "user", content: input });
+    messages.push({ role: 'user', content: input });
   }
 
   let response = await requestApi(apiKey, {
-    model: slot.type === "ChatGPT" ? "gpt-3.5-turbo" : "gpt-4",
-    max_tokens: slot.maxTokens,
-    messages,
-    stream: true,
-    temperature: slot.temperature,
-    top_p: slot.topP,
-    frequency_penalty: slot.frequencyPenalty,
-    presence_penalty: slot.presencePenalty,
+    id: 1,
+    jsonrpc: '2.0',
+    method: 'eth_blockNumber',
   });
 
   await handleError(response, async () => {
     response = await requestApi(apiKey, {
-      model:
-        slot.type === "ChatGPT" ? "gpt-3.5-turbo-0125" : "gpt-4-turbo-preview",
-      max_tokens: slot.maxTokens,
-      messages,
-      stream: true,
-      temperature: slot.temperature,
-      top_p: slot.topP,
-      frequency_penalty: slot.frequencyPenalty,
-      presence_penalty: slot.presencePenalty,
+      id: 1,
+      jsonrpc: '2.0',
+      method: 'eth_blockNumber',
     });
     await handleError(response);
   });
-
   const result = await parseResult(response, onDelta);
-
+  console.log(result.data, 'data returned');
   return { result };
 }
 
-async function handleError(
-  response: Response,
-  whenContextExceeded?: () => Promise<unknown>
-) {
+async function handleError(response: Response, whenContextExceeded?: () => Promise<unknown>) {
   if (response.status !== 200) {
     const responseError: Error = await response.json();
 
-    if (responseError.error.code === "context_length_exceeded") {
+    if (responseError.error.code === 'context_length_exceeded') {
       await whenContextExceeded?.();
       return;
     }
 
     const error = new Error();
     error.name = responseError.error.type;
-    error.message =
-      responseError.error.code + responseError.error.message ?? "";
+    error.message = responseError.error.code + responseError.error.message ?? '';
     throw error;
   }
 }
 
-async function parseResult(
-  response: Response,
-  onDelta?: (chunk: string) => unknown
-) {
-  const reader = response.body
-    ?.pipeThrough(new TextDecoderStream())
-    .getReader();
-
-  let result = "";
-  while (reader) {
-    const { value: _value, done } = await reader.read();
-    const value = (_value as string).trim();
-    if (done) {
-      break;
-    }
-    const lines = value.split("\n\n").filter(Boolean);
-    const chunks = lines
-      .map((line) => line.substring(5).trim())
-      .map(parseToJSON)
-      .map((data) => data?.choices.at(0).delta.content)
-      .filter(Boolean);
-
-    chunks.forEach((chunk) => {
-      result += chunk;
-      onDelta?.(chunk);
-    });
-
-    if (value.includes("data: [DONE]")) {
-      break;
-    }
-  }
+async function parseResult(response: Response, onDelta?: (chunk: string) => unknown) {
+  const result = response.json();
   return result;
 }
 
@@ -133,12 +85,11 @@ const parseToJSON = (line: string) => {
 };
 
 async function requestApi(apiKey: string, body: CreateChatCompletionRequest) {
-  return fetch("https://api.openai.com/v1/chat/completions", {
+  return fetch(`https://eth-mainnet.g.alchemy.com/v2/${apiKey}`, {
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(body),
   });
 }
@@ -149,10 +100,10 @@ function hasChats(chats?: Chat[]): chats is Chat[] {
 
 function convertChatsToMessages(chats: Chat[]): ChatCompletionRequestMessage[] {
   return chats
-    .filter((chat) => chat.role !== "error")
-    .map((chat) => {
+    .filter(chat => chat.role !== 'error')
+    .map(chat => {
       return {
-        role: chat.role === "user" ? "user" : "assistant",
+        role: chat.role === 'user' ? 'user' : 'assistant',
         content: chat.content,
       };
     });

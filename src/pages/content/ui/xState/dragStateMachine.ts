@@ -151,11 +151,11 @@ const dragStateMachine = createMachine(
         chats: context => context.chats.concat({ role: 'user', content: context.selectedText }),
       }),
       addInitialResponseChat: assign({
-        chats: (context, event) =>
-          context.chats.concat({
-            role: 'assistant',
-            content: event.data.firstChunk,
-          }),
+        chats: (context, event) => console.log(event.data, 'event.data', 'context', context),
+        // context.chats.concat({
+        //   role: 'assistant',
+        //   content: event.data.firstChunk,
+        // }),
       }),
       addResponseChatChunk: assign({
         chats: ({ chats }, event) => {

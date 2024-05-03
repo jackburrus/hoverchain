@@ -5,6 +5,7 @@ import dragStateMachine from './xState/dragStateMachine';
 import delayPromise from './utils/delayPromise';
 import { useEffect } from 'react';
 import DataRequestButton from './components/DataRequestButton';
+import DataResponseBox from './components/DataResponseBox';
 const skipLoopCycleOnce = async () => await delayPromise(1);
 
 async function getAlchemyResponseAsStream({ input, onFinish }: { input: string; onFinish: (result: string) => void }) {
@@ -31,7 +32,7 @@ export default function HoverChain() {
       getAlchemyResponse: context => getAlchemyResponseAsStream({ input: context.selectedText, onFinish: console.log }),
     },
   });
-
+  console.log('state', state);
   useEffect(() => {
     const onMouseUp = async (event: MouseEvent) => {
       /** Selection 이벤트 호출을 기다리는 해키한 코드 */
@@ -56,6 +57,8 @@ export default function HoverChain() {
   const requestAlchemy = () => {
     send('REQUEST');
   };
+
+  console.log('This is the current state,', state.matches('temp_response_message_box'));
   return (
     <>
       {state.hasTag('showRequestButton') && (
@@ -64,6 +67,18 @@ export default function HoverChain() {
           loading={state.matches('loading')}
           top={state.context.requestButtonPosition.top}
           left={state.context.requestButtonPosition.left}
+        />
+      )}
+      {state.matches('temp_response_message_box') && (
+        <DataResponseBox
+          content={'Hello World!'}
+          width={200}
+          isOutsideClickDisabled={true}
+          onClose={() => send('RECEIVE_CANCEL')}
+          anchorTop={state.context.anchorNodePosition.top}
+          anchorCenter={state.context.anchorNodePosition.center}
+          anchorBottom={state.context.anchorNodePosition.bottom}
+          positionOnScreen={state.context.positionOnScreen}
         />
       )}
     </>

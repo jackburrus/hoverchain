@@ -24,6 +24,8 @@ chrome.runtime.onConnect.addListener(port => {
       sendMessageToClient(port, message);
     };
 
+    console.log('This is the message from background', message);
+
     try {
       switch (message.type) {
         case 'GetSlots': {

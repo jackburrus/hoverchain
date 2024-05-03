@@ -16,13 +16,13 @@ export interface Typegen0 {
     'xstate.stop': { type: 'xstate.stop' };
   };
   invokeSrcNameMap: {
-    getGPTResponse: 'done.invoke.drag-state.loading:invocation[0]';
+    getAlchemyResponse: 'done.invoke.drag-state.loading:invocation[0]';
   };
   missingImplementations: {
     actions: 'setPositionOnScreen';
     delays: never;
     guards: never;
-    services: 'getGPTResponse';
+    services: 'getAlchemyResponse';
   };
   eventsCausingActions: {
     addInitialResponseChat: 'done.invoke.drag-state.loading:invocation[0]';
@@ -43,7 +43,7 @@ export interface Typegen0 {
     isValidTextSelectedEvent: 'TEXT_SELECTED';
   };
   eventsCausingServices: {
-    getGPTResponse: 'REQUEST';
+    getAlchemyResponse: 'REQUEST';
   };
   matchesStates:
     | 'error_message_box'

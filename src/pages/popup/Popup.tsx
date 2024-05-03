@@ -55,13 +55,13 @@ const Popup = () => {
       style={{
         backgroundColor: theme === 'light' ? '#fff' : '#000',
       }}>
-      <h1>Hello World </h1>
-
-      <NoApiKeyPage
-        apiKeyError={state.context.apiKeyCheckError}
-        loading={state.matches('checking_api_key')}
-        checkApiKey={checkApiKey}
-      />
+      {state.hasTag('noApiKeyPage') && (
+        <NoApiKeyPage
+          apiKeyError={state.context.apiKeyCheckError}
+          loading={state.matches('checking_api_key')}
+          checkApiKey={checkApiKey}
+        />
+      )}
     </div>
   );
 };

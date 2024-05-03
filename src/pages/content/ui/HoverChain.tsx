@@ -4,7 +4,15 @@ import { getSelectionNodeRect, getSelectionText } from '@pages/content/ui/utils/
 import dragStateMachine from './xState/dragStateMachine';
 import delayPromise from './utils/delayPromise';
 import { useEffect } from 'react';
+import DataRequestButton from './components/DataRequestButton';
 const skipLoopCycleOnce = async () => await delayPromise(1);
+
+async function getAlchemyResponseAsStream({ input, onFinish }: { input: string; onFinish: (result: string) => void }) {
+  // Do Fetch here!
+  // const response = await fetch("https://alchemyapi.io/api/1/text/TextGetTextSentiment?apikey=YOUR_API")
+  console.log('fetching', input);
+}
+
 export default function HoverChain() {
   const [state, send] = useMachine(dragStateMachine, {
     actions: {
@@ -20,7 +28,7 @@ export default function HoverChain() {
       },
     },
     services: {
-      getGPTResponse: context => console.log('response', context.selectedText),
+      getAlchemyResponse: context => getAlchemyResponseAsStream({ input: context.selectedText, onFinish: console.log }),
     },
   });
 
@@ -45,5 +53,19 @@ export default function HoverChain() {
       window.document.removeEventListener('mouseup', onMouseUp);
     };
   }, []);
-  return <></>;
+  const requestAlchemy = () => {
+    send('REQUEST');
+  };
+  return (
+    <>
+      {state.hasTag('showRequestButton') && (
+        <DataRequestButton
+          onClick={requestAlchemy}
+          loading={state.matches('loading')}
+          top={state.context.requestButtonPosition.top}
+          left={state.context.requestButtonPosition.left}
+        />
+      )}
+    </>
+  );
 }

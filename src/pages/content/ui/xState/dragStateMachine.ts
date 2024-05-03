@@ -1,4 +1,4 @@
-import type { PositionOnScreen } from '@pages/content/src/ContentScriptApp/utils/getPositionOnScreen';
+import type { PositionOnScreen } from '@pages/content/ui/utils/getPositionOnScreen';
 import { assign, createMachine } from 'xstate';
 
 type NodeRect = { left: number; width: number; height: number; top: number };
@@ -93,7 +93,7 @@ const dragStateMachine = createMachine(
         entry: ['setAnchorNodePosition'],
         exit: ['setPositionOnScreen'],
         invoke: {
-          src: 'getGPTResponse',
+          src: 'getAlchemyResponse',
           onDone: {
             target: 'temp_response_message_box',
             actions: 'addInitialResponseChat',

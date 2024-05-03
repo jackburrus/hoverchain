@@ -47,6 +47,8 @@ const Popup = () => {
   const checkApiKey = (apiKey: string) => {
     send({ type: 'CHECK_API_KEY', data: apiKey });
   };
+
+  console.log('this is the new state!!', state);
   return (
     <div
       className="App"

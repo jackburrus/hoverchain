@@ -91,6 +91,7 @@ const popupStateMachine = createMachine(
       setApiKey: assign({
         alchemyApiKey: (_, event) => event.data,
       }),
+
       resetAlchemyApiKey: assign({
         alchemyApiKey: null,
       }),

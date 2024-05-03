@@ -1,7 +1,7 @@
 import { ILocalStorage, LocalStorage } from '@src/pages/chrome/localStorage';
 
 export class ApiKeyStorage {
-  private static API_KEY = 'ALCHEMY_API_KEY';
+  private static API_KEY = 'OPEN_AI_API_KEY';
   static storage: ILocalStorage = new LocalStorage();
 
   static async getApiKey(): Promise<string> {

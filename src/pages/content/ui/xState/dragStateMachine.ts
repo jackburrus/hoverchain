@@ -119,6 +119,7 @@ const dragStateMachine = createMachine(
         tags: 'showResponseMessages',
         on: {
           CLOSE_MESSAGE_BOX: 'idle',
+          RECEIVE_CANCEL: 'idle',
         },
       },
       error_message_box: {

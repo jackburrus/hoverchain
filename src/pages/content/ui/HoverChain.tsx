@@ -69,6 +69,8 @@ export default function HoverChain() {
     send('REQUEST');
   };
 
+  console.log(state, 'this is the current state');
+
   return (
     <>
       {state.hasTag('showRequestButton') && (

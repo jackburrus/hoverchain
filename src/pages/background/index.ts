@@ -4,6 +4,8 @@ import { chatGPT } from '@pages/background/lib/infra/chatGPT';
 import Logger from '@pages/background/lib/utils/logger';
 import { sendErrorMessageToClient, sendMessageToClient } from '@src/pages/chrome/message';
 
+import { Network, Alchemy } from 'alchemy-sdk';
+
 reloadOnUpdate('pages/background');
 
 type RequiredDataNullableInput<T extends Message> = {
@@ -86,22 +88,39 @@ chrome.runtime.onConnect.addListener(port => {
           sendResponse({ type: 'ResetAPIKey', data: 'success' });
           break;
         case 'RequestInitialDragGPTStream': {
-          const slot = await SlotStorage.getSelectedSlot();
+          // const slot = await SlotStorage.getSelectedSlot();
           const apiKey = await ApiKeyStorage.getApiKey();
-          const response = await chatGPT({
-            input: message.input,
-            slot,
-            apiKey,
-            onDelta: chunk => {
-              sendResponse({
-                type: 'RequestInitialDragGPTStream',
-                data: {
-                  result: '',
-                  chunk,
-                },
-              });
-            },
+          const baseUrl = `https://eth-mainnet.alchemyapi.io/v2/${apiKey}`;
+          const body = {
+            id: 1,
+            jsonrpc: '2.0',
+            method: 'eth_blockNumber',
+          };
+          const headers = {
+            'Content-Type': 'application/json',
+          };
+          const response = await fetch(baseUrl, {
+            headers,
+            method: 'POST',
+            body: JSON.stringify(body),
           });
+          const result = await response.json();
+          console.log(result, 'result from Alchemy??');
+
+          // const response = await chatGPT({
+          //   input: message.input,
+          //   slot,
+          //   apiKey,
+          //   onDelta: chunk => {
+          //     sendResponse({
+          //       type: 'RequestInitialDragGPTStream',
+          //       data: {
+          //         result: '',
+          //         chunk,
+          //       },
+          //     });
+          //   },
+          // });
           sendResponse({
             type: 'RequestInitialDragGPTStream',
             data: {

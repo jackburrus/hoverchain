@@ -6,12 +6,26 @@ import delayPromise from './utils/delayPromise';
 import { useEffect } from 'react';
 import DataRequestButton from './components/DataRequestButton';
 import DataResponseBox from './components/DataResponseBox';
+import { sendMessageToBackground } from '../../chrome/message';
 const skipLoopCycleOnce = async () => await delayPromise(1);
 
 async function getAlchemyResponseAsStream({ input, onFinish }: { input: string; onFinish: (result: string) => void }) {
-  // Do Fetch here!
-  // const response = await fetch("https://alchemyapi.io/api/1/text/TextGetTextSentiment?apikey=YOUR_API")
-  console.log('fetching', input);
+  return new Promise((resolve, reject) => {
+    sendMessageToBackground({
+      message: {
+        type: 'RequestInitialDragGPTStream',
+        input,
+      },
+      handleSuccess: response => {
+        if (response.isDone || !response.chunk) {
+          return onFinish(response.result);
+        }
+        resolve({ firstChunk: response.chunk });
+        // onDelta(response.chunk);
+      },
+      handleError: reject,
+    });
+  });
 }
 
 export default function HoverChain() {
@@ -58,7 +72,7 @@ export default function HoverChain() {
     send('REQUEST');
   };
 
-  console.log('This is the current state,', state.matches('temp_response_message_box'));
+  console.log('This is the current state,', state);
   return (
     <>
       {state.hasTag('showRequestButton') && (

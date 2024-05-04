@@ -53,8 +53,20 @@ const Popup = () => {
     <div
       className="App"
       style={{
-        backgroundColor: theme === 'light' ? '#fff' : '#000',
+        backgroundColor: '#ECE1D9',
+        border: '2px solid black',
       }}>
+      <h1 className="text-lg underline mb-4">Welcome to HoverChain</h1>
+
+      <ul className="flex items-start flex-col">
+        <li className="font-bold">Getting Started:</li>
+        <li>1. Get your API key from Alchemy</li>
+        <li>2. Enter your API key</li>
+        <li>3. Click Save</li>
+        <li>4. Select an Ethereum address</li>
+        <li>5. Choose which chain to search.</li>
+        <li>6. Browse Ethereum!</li>
+      </ul>
       {state.hasTag('noApiKeyPage') && (
         <NoApiKeyPage
           apiKeyError={state.context.apiKeyCheckError}
@@ -62,6 +74,7 @@ const Popup = () => {
           checkApiKey={checkApiKey}
         />
       )}
+      <div className="m-4">{!state.hasTag('noApiKeyPage') && <p>API Key: ✅ All Set!</p>}</div>
     </div>
   );
 };

@@ -43,3 +43,11 @@
     transform: rotate(360deg);
   }
 }
+
+.retro-highlight {
+  font-family: 'Press Start 2P', monospace; /* Retro-style pixel font */
+  background-color: #ffcc00; /* Bright yellow background */
+  color: black; /* Ensures text is readable */
+  padding: 2px;
+  border: 1px dotted red; /* Retro computer-like border */
+}

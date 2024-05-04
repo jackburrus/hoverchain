@@ -17,9 +17,18 @@ export const NoApiKeyPage = ({ loading, checkApiKey, apiKeyError }: NoApiKeyPage
     return <div>Loading...</div>;
   }
   return (
-    <div>
-      <input className="border" type="text" value={apiKey} onChange={handleChange} />
-      <button onClick={onClickSaveButton}>Save</button>
+    <div
+      className="m-4 flex-col"
+      style={{
+        backgroundColor: '#ECE1D9',
+      }}>
+      <p>Enter Alchemy API Key:</p>
+      <div className="w-full justify-evenly mt-1">
+        <input className="border" type="text" value={apiKey} onChange={handleChange} />
+        <button className="px-3 py-2 rounded-md ml-4" onClick={onClickSaveButton}>
+          Save
+        </button>
+      </div>
       {apiKeyError && (
         <>
           <h3 className="text-red-500">{apiKeyError.name}</h3>

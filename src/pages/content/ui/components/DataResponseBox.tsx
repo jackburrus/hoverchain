@@ -5,6 +5,7 @@ import UserInformation from './UserInformation';
 import { PositionOnScreen } from '../utils/getPositionOnScreen';
 import { ReadMethods } from './ReadMethods';
 import { WriteMethods } from './WriteMethods';
+import TokensList from './TokensList';
 
 export type MessageBoxProps = {
   isOutsideClickDisabled?: boolean;
@@ -36,7 +37,7 @@ export default function DataResponseBox({
 }: MessageBoxProps) {
   const [activeTab, setActiveTab] = useState('read'); // Default active tab for contract
   const [nonContractActiveTab, setNonContractActiveTab] = useState('nfts'); // Default active tab for non-contract
-
+  console.log('content in data response box', content);
   // Conditional rendering based on contract
   if (isContract) {
     return (
@@ -122,7 +123,7 @@ export default function DataResponseBox({
         </button>
       </div>
       <UserInformation isContract={false} content={content} />
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0' }}>
+      <div className="text-sm justify-evenly" style={{ display: 'flex', justifyContent: 'center', padding: '10px 0' }}>
         <button
           onClick={() => setNonContractActiveTab('nfts')}
           className={nonContractActiveTab === 'nfts' ? 'underline' : 'normal'}
@@ -135,9 +136,21 @@ export default function DataResponseBox({
           style={{ fontWeight: nonContractActiveTab === 'transfers' ? 'bold underline' : 'normal' }}>
           Transfers
         </button>
+        <button
+          onClick={() => setNonContractActiveTab('tokens')}
+          className={nonContractActiveTab === 'tokens' ? 'underline' : 'normal'}
+          style={{ marginRight: 20, fontWeight: nonContractActiveTab === 'tokens' ? 'bold underline' : 'normal' }}>
+          Tokens
+        </button>
       </div>
       <div style={{ padding: '10px', fontFamily: 'Courier', fontSize: '12px' }}>
-        {nonContractActiveTab === 'nfts' ? <NFTList content={content} /> : <TransferList content={content} />}
+        {nonContractActiveTab === 'nfts' ? (
+          <NFTList content={content} />
+        ) : nonContractActiveTab === 'transfers' ? (
+          <TransferList content={content} />
+        ) : (
+          <TokensList content={content} />
+        )}
       </div>
       {footer && <div style={{ borderTop: '1px solid black', padding: '10px' }}>{footer}</div>}
     </div>

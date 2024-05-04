@@ -92,6 +92,13 @@ chrome.runtime.onConnect.addListener(port => {
             const apiKey = await ApiKeyStorage.getApiKey();
 
             // Define the API URLs
+            const tokensUrl = `https://eth-mainnet.g.alchemy.com/v2/${apiKey}`;
+            const tokensBody = {
+              id: 1,
+              jsonrpc: '2.0',
+              method: 'alchemy_getTokenBalances',
+              params: [message.input],
+            };
             const nftUrl = `https://eth-mainnet.g.alchemy.com/nft/v2/${apiKey}/getNFTs?owner=${message.input}&withMetadata=true&pageSize=100`;
             const transferUrl = `https://eth-mainnet.g.alchemy.com/v2/${apiKey}`;
             const mantleExplorerUrl = `https://explorer.sepolia.mantle.xyz/api/v2/smart-contracts/${message.input}`;
@@ -102,6 +109,7 @@ chrome.runtime.onConnect.addListener(port => {
 
             // Perform API requests
             const mantleExplorerRequest = fetch(mantleExplorerUrl, { method: 'GET', headers });
+            const tokensRequest = fetch(tokensUrl, { method: 'POST', headers, body: JSON.stringify(tokensBody) });
             const nftRequest = fetch(nftUrl, { method: 'GET' });
             const transferRequest = fetch(transferUrl, {
               headers,
@@ -126,6 +134,8 @@ chrome.runtime.onConnect.addListener(port => {
 
             // handle them one at a time
             const mantleResponse = await mantleExplorerRequest;
+            const tokensResponse = await tokensRequest;
+
             const nftResponse = await nftRequest;
             const transferResponse = await transferRequest;
 
@@ -133,6 +143,51 @@ chrome.runtime.onConnect.addListener(port => {
 
             if (mantleResponse.status === 404) {
               // Handle if it's a wallet
+              const tokensData = await tokensResponse.json();
+              const slicedTokensData = tokensData.result.tokenBalances.slice(0, 200);
+
+              // iterate through all the token balances and parse the token balance
+              for (let i = 0; i < slicedTokensData.length; i++) {
+                slicedTokensData[i].tokenBalance = parseInt(slicedTokensData[i].tokenBalance);
+              }
+              let tokenMetadata = [];
+              try {
+                const metadataPromises = slicedTokensData.map(async tokenInfo => {
+                  const response = await fetch(tokensUrl, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      id: 1,
+                      jsonrpc: '2.0',
+                      method: 'alchemy_getTokenMetadata',
+                      params: [tokenInfo.contractAddress],
+                    }),
+                  });
+
+                  if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+
+                  const metadata = await response.json();
+                  return {
+                    ...tokenInfo,
+                    tokenMetadata: metadata,
+                  };
+                });
+
+                const enrichedTokensData = await Promise.all(metadataPromises);
+
+                tokenMetadata = enrichedTokensData;
+
+                // Now enrichedTokensData contains all tokens with their metadata attached
+                // Proceed with further processing or response
+              } catch (error) {
+                console.error('Error fetching token metadata:', error);
+                // Handle error appropriately
+              }
+
               const nftData = await nftResponse.json();
               const transferData = await transferResponse.json();
 
@@ -140,6 +195,7 @@ chrome.runtime.onConnect.addListener(port => {
                 originalAddress: { address: message.input },
                 nfts: nftData,
                 transfers: transferData,
+                tokens: tokenMetadata,
               };
 
               sendResponse({

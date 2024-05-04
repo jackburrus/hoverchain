@@ -24,7 +24,7 @@ export const NoApiKeyPage = ({ loading, checkApiKey, apiKeyError }: NoApiKeyPage
       }}>
       <p>Enter Alchemy API Key:</p>
       <div className="w-full justify-evenly mt-1">
-        <input className="border" type="text" value={apiKey} onChange={handleChange} />
+        <input className="border" type="password" value={apiKey} onChange={handleChange} />
         <button className="px-3 py-2 rounded-md ml-4" onClick={onClickSaveButton}>
           Save
         </button>

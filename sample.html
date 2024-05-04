@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample CoinDesk Story: Highlighting Ethereum Addresses</title>
+    <title>HoverChain: Interactive Ethereum Insights</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,6 +21,8 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            overflow-y: scroll;
+            max-height: 80vh;
         }
         h1, h2 {
             color: #333;
@@ -36,21 +38,29 @@
         .ethereum-address {
             font-family: monospace;
             color: #007bff;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Decentralized Finance: The Future of Banking</h1>
-        <p>Decentralized finance (DeFi) is transforming the financial landscape, removing intermediaries and bringing direct financial control to users globally.</p>
+    <div class="container" >
+        <h1>Welcome to HoverChain</h1>
+        <p>HoverChain is a Chrome extension that enhances your browsing experience by providing interactive insights into Ethereum addresses and smart contracts you encounter online. Simply select any Ethereum address to reveal a tooltip with options for deeper exploration.</p>
 
-        <p>In the DeFi ecosystem, managing Ethereum wallet addresses is essential. Users interact with DeFi services using unique Ethereum addresses, like sending to <span class="ethereum-address">0x34aA3F359A9D614239015126635CE7732c18fDF3</span>, which serve as both a destination and an identity within the blockchain network.</p>
+        <h2>How does it work?</h2>
+        <p>Once you set your api key in the toolbar popup ☝️, HoverChain does all the heavy lifing right in your browser to get you all the up to date blockchain information.</p>
 
-        <h2>Understanding Smart Contracts</h2>
-        <p>Smart contracts automate transactions and enforce the terms of agreements in the DeFi space. Consider the smart contract deployed at <span class="ethereum-address">0x22a639e102335273e9615a11968e24af8d9814fb</span>, which exemplifies the foundational functionalities expected in DeFi systems.</p>
+        <p>Try selecting this Ethereum wallet address to see its associated NFTs, transfers, and tokens: <span class="ethereum-address">0x34aA3F359A9D614239015126635CE7732c18fDF3</span>.</p>
 
-        <h2>List of Deployed Contracts</h2>
-        <p>Below is a list of key smart contracts deployed as part of our DeFi initiative:</p>
+        <h2>Why is it useful?</h2>
+        <p>Context switching is a massive drain on our focus. With HoverChain, you never have to leave the context of the information you are interacting with in order to learn more about a wallet or contract.</p>
+        <p>Wallets and Contracts are links to troves of data, yet we don't always provide a full link to Etherscan or Opensea. HoverChain does the link aggregation for you.</p>
+
+        <h2>Deployed Contracts</h2>
+        <p>HoverChain also provides insights into smart contracts. For instance, hover over the following contract address to view its read and write methods: <span class="ethereum-address">0x22a639e102335273e9615a11968e24af8d9814fb</span>.</p>
+
+
+        <p>Below is a list of key smart contracts. Select each address to explore their functionalities:</p>
         <ul>
             <li><span class="ethereum-address">0x9e53e9f0A6A73caABD20668EF498B3022F55aBd5</span></li>
             <li><span class="ethereum-address">0x39f39f43f1B0Dcbc966FC37f82e8018318a7a9DF</span></li>
@@ -58,9 +68,8 @@
             <li><span class="ethereum-address">0x15b9eEB14E166400905c42DFfec63384D5ab8CEE</span></li>
         </ul>
 
-        <p>Decentralized exchanges (DEXs) like <strong>Uniswap</strong> leverage these contracts to facilitate direct peer-to-peer trading, enhancing liquidity and market accessibility.</p>
-
-        <p>To summarize, DeFi is not just a new financial technology but a shift towards a more open and accessible financial system, enabled by blockchain and smart contracts. This evolution brings enhanced transparency and security, disrupting traditional financial paradigms.</p>
+        <p>HoverChain provides a familiar Web2 like Chrome extension experience for exploring onchain!</p>
+        <p>Make sure to checkout and star the Github: <a rel="no-referrer" target="_blank" href="https://github.com/jackburrus/hoverchain">HoverChain</a></p>
     </div>
 </body>
 </html>

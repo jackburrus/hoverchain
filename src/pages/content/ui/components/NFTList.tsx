@@ -8,7 +8,7 @@ export default function NFTList({ content }: { content: any }) {
   };
 
   return (
-    <div className="grid grid-cols-3 gap-5">
+    <div className="grid grid-cols-3 gap-5 items-center">
       {allImages.length
         ? allImages.slice(0, 10).map((imageUrl: string, index: number) => (
             <img

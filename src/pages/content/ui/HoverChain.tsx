@@ -98,7 +98,7 @@ export default function HoverChain() {
         {state.matches('temp_response_message_box') && (
           <DataLoadingBox
             content={'Hello World!'}
-            width={400}
+            width={450}
             isOutsideClickDisabled={true}
             onClose={() => send('RECEIVE_CANCEL')}
             anchorTop={state.context.anchorNodePosition.top}
@@ -111,7 +111,7 @@ export default function HoverChain() {
           <DataResponseBox
             content={dataToDisplay[0]}
             isContract={dataToDisplay[0]?.mantleData}
-            width={400}
+            width={450}
             isOutsideClickDisabled={true}
             onClose={() => send('RECEIVE_CANCEL')}
             anchorTop={state.context.anchorNodePosition.top}

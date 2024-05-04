@@ -46,13 +46,12 @@ export default function DataLoadingBox({
 
   return (
     <div
-      className="p-10"
       style={{
         position: 'absolute',
         top: anchorTop,
         left: positionOnScreen === 'topLeft' ? anchorCenter - width : anchorCenter,
         width: width,
-        backgroundColor: '#c0c0c0', // Classic gray background
+        backgroundColor: '#ECE1D9', // Classic gray background
         border: '2px solid black', // Solid black border
         borderRadius: 0, // No rounded corners
         zIndex: 1000,
@@ -64,7 +63,7 @@ export default function DataLoadingBox({
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '5px 10px',
-          backgroundColor: '#000080', // Dark blue header
+          backgroundColor: '#F87A1B', // Dark blue header
           color: 'white', // White text for contrast
         }}>
         {header}
@@ -74,8 +73,10 @@ export default function DataLoadingBox({
           X
         </button>
       </div>
-      <div style={{ color: 'black', fontFamily: 'System', fontSize: '14px', textAlign: 'center', marginTop: '10px' }}>
-        <h1>Loading...</h1>
+      <div
+        className="flex items-center flex-col justify-center m-4"
+        style={{ color: 'black', fontFamily: 'System', fontSize: '14px', textAlign: 'center', marginTop: '10px' }}>
+        <h1 className="m-4">Loading...</h1>
         {nounImages[currentIndex]}
       </div>
       {footer && <div style={{ borderTop: '1px solid black', padding: '10px' }}>{footer}</div>}

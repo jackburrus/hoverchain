@@ -3,7 +3,7 @@ export default function TokensList({ content }: { content: any }) {
   const filteredTokens = content?.tokens?.filter(token => token?.tokenBalance > 0 && token?.tokenBalance < 1000);
   return (
     <div>
-      <div className="gap-y-4 max-h-[300px] overflow-y-scroll">
+      <div className="gap-y-4 max-h-[300px] overflow-y-auto">
         {filteredTokens?.map((token, index) => (
           <div key={index} className="p-2 border-b border-gray-200">
             <p className="my-2">

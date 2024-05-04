@@ -1,12 +1,6 @@
-import React from 'react';
 import noun1 from '@assets/img/nouns/noun-1.png';
-import noun2 from '@assets/img/nouns/noun-2.png';
-import noun3 from '@assets/img/nouns/noun-3.png';
-import noun4 from '@assets/img/nouns/noun-4.png';
-import noun5 from '@assets/img/nouns/noun-5.png';
 
 export default function UserInformation({ content, isContract }: { content: any; isContract: boolean }) {
-  console.log(content, 'contract content in user information');
   const isVerifiedContract = content?.mantleData?.is_verified;
   const contractName = content?.mantleData?.name;
   return (

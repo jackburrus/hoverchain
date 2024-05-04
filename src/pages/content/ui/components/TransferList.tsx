@@ -4,7 +4,7 @@ export default function TransferList({ content }: { content: any }) {
   const slicedTransfers = content?.transfers?.result?.transfers?.reverse().slice(0, 10);
   return (
     <div>
-      <div className="gap-y-4 max-h-[300px] overflow-y-scroll">
+      <div className="gap-y-4 max-h-[300px] overflow-y-auto">
         {slicedTransfers?.map((transfer, index) => (
           <div key={index} className="p-2 border-b border-gray-200">
             <p className="my-2">

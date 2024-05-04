@@ -47,10 +47,11 @@ export default function DataResponseBox({
           top: anchorTop,
           left: positionOnScreen === 'topLeft' ? anchorCenter - width : anchorCenter,
           width: width,
-          backgroundColor: '#c0c0c0',
+          backgroundColor: '#ECE1D9',
           border: '2px solid black',
           borderRadius: 0,
           zIndex: 1000,
+          color: '#110E1B',
         }}
         {...restProps}>
         <div
@@ -59,29 +60,27 @@ export default function DataResponseBox({
             justifyContent: 'space-between',
             alignItems: 'center',
             padding: '5px 10px',
-            backgroundColor: '#000080',
-            color: 'white',
+            backgroundColor: '#F87A1B',
+            color: '#110E1B',
           }}>
           {header}
-          <button
-            style={{ color: 'white', fontWeight: 'bold', backgroundColor: 'transparent', border: 'none' }}
-            onClick={onClose}>
+          <button style={{ fontWeight: 'bold', backgroundColor: 'transparent', border: 'none' }} onClick={onClose}>
             X
           </button>
         </div>
         <UserInformation isContract={isContract} content={content} />
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'start', padding: '10px 0' }}>
           <button
             onClick={() => setActiveTab('read')}
-            className={activeTab === 'read' ? 'underline' : 'normal'}
+            className={`${activeTab === 'read' && 'shadow-[5px_5px_0px_0px_rgba(109,40,217)]'} border border-black rounded-md py-2 px-3 ml-2 text-black`}
             style={{ marginRight: 20, fontWeight: activeTab === 'read' ? 'bold underline' : 'normal' }}>
-            Read Contract
+            Read
           </button>
           <button
             onClick={() => setActiveTab('write')}
-            className={activeTab === 'write' ? 'underline' : 'normal'}
+            className={`${activeTab === 'write' && 'shadow-[5px_5px_0px_0px_rgba(109,40,217)]'} border border-black rounded-md py-2 px-3 ml-4`}
             style={{ fontWeight: activeTab === 'write' ? 'bold underline' : 'normal' }}>
-            Write Contract
+            Write
           </button>
         </div>
         <div style={{ padding: '10px', fontFamily: 'Courier', fontSize: '12px' }}>
@@ -95,12 +94,13 @@ export default function DataResponseBox({
   // Non-contract UI
   return (
     <div
+      className="text-black"
       style={{
         position: 'absolute',
         top: anchorTop,
         left: positionOnScreen === 'topLeft' ? anchorCenter - width : anchorCenter,
         width: width,
-        backgroundColor: '#c0c0c0',
+        backgroundColor: '#ECE1D9',
         border: '2px solid black',
         borderRadius: 0,
         zIndex: 1000,
@@ -112,33 +112,31 @@ export default function DataResponseBox({
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '5px 10px',
-          backgroundColor: '#000080',
-          color: 'white',
+          backgroundColor: '#F87A1B',
+          color: '#110E1B',
         }}>
         {header}
-        <button
-          style={{ color: 'white', fontWeight: 'bold', backgroundColor: 'transparent', border: 'none' }}
-          onClick={onClose}>
+        <button style={{ fontWeight: 'bold', backgroundColor: 'transparent', border: 'none' }} onClick={onClose}>
           X
         </button>
       </div>
       <UserInformation isContract={false} content={content} />
-      <div className="text-sm justify-evenly" style={{ display: 'flex', justifyContent: 'center', padding: '10px 0' }}>
+      <div className="text-sm justify-evenly flex mx-2 border gap-4">
         <button
           onClick={() => setNonContractActiveTab('nfts')}
-          className={nonContractActiveTab === 'nfts' ? 'underline' : 'normal'}
+          className={`${nonContractActiveTab === 'nfts' && 'shadow-[5px_5px_0px_0px_rgba(109,40,217)]'} border border-black rounded-md py-2 px-3`}
           style={{ marginRight: 20, fontWeight: nonContractActiveTab === 'nfts' ? 'bold underline' : 'normal' }}>
           NFTs
         </button>
         <button
           onClick={() => setNonContractActiveTab('transfers')}
-          className={nonContractActiveTab === 'transfers' ? 'underline' : 'normal'}
+          className={`${nonContractActiveTab === 'transfers' && 'shadow-[5px_5px_0px_0px_rgba(109,40,217)]'} border border-black rounded-md py-2 px-3`}
           style={{ fontWeight: nonContractActiveTab === 'transfers' ? 'bold underline' : 'normal' }}>
           Transfers
         </button>
         <button
           onClick={() => setNonContractActiveTab('tokens')}
-          className={nonContractActiveTab === 'tokens' ? 'underline' : 'normal'}
+          className={`${nonContractActiveTab === 'tokens' && 'shadow-[5px_5px_0px_0px_rgba(109,40,217)]'} border border-black rounded-md py-2 px-3`}
           style={{ marginRight: 20, fontWeight: nonContractActiveTab === 'tokens' ? 'bold underline' : 'normal' }}>
           Tokens
         </button>

@@ -6,7 +6,7 @@ export function ReadMethods({ content }: { content: any }) {
   );
 
   return (
-    <div className="max-h-[300px] overflow-y-scroll">
+    <div className="max-h-[300px] overflow-y-auto">
       {readMethods.map((method, index) => (
         <div key={index} className="p-2 border-b border-gray-200">
           <h3 className="font-bold">{method.name}</h3>

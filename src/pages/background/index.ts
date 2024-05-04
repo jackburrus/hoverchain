@@ -88,33 +88,62 @@ chrome.runtime.onConnect.addListener(port => {
           sendResponse({ type: 'ResetAPIKey', data: 'success' });
           break;
         case 'RequestInitialDragGPTStream': {
-          // const slot = await SlotStorage.getSelectedSlot();
-          const apiKey = await ApiKeyStorage.getApiKey();
-          const baseUrl = `https://eth-mainnet.alchemyapi.io/v2/${apiKey}`;
-          const body = {
-            id: 1,
-            jsonrpc: '2.0',
-            method: 'eth_gasPrice',
-          };
-          const headers = {
-            'Content-Type': 'application/json',
-          };
-          const response = await fetch(baseUrl, {
-            headers,
-            method: 'POST',
-            body: JSON.stringify(body),
-          });
-          const result = await response.json();
+          try {
+            const apiKey = await ApiKeyStorage.getApiKey();
 
-          sendResponse({
-            type: 'RequestInitialDragGPTStream',
-            data: {
-              isDone: true,
-              result,
-            },
-          });
+            const nftUrl = `https://eth-mainnet.g.alchemy.com/nft/v2/${apiKey}/getNFTs?owner=${message.input}&withMetadata=true&pageSize=100`;
+            const transferUrl = `https://eth-mainnet.g.alchemy.com/v2/${apiKey}`;
+
+            const headers = {
+              'Content-Type': 'application/json',
+            };
+
+            const nftRequest = fetch(nftUrl, { method: 'GET' });
+            const transferRequest = fetch(transferUrl, {
+              headers,
+              method: 'POST',
+              body: JSON.stringify({
+                id: 1,
+                jsonrpc: '2.0',
+                method: 'alchemy_getAssetTransfers',
+                params: [
+                  {
+                    fromBlock: '0x0',
+                    toBlock: 'latest',
+                    toAddress: message.input,
+                    withMetadata: false,
+                    excludeZeroValue: true,
+                    maxCount: '0x3e8',
+                    category: ['external'],
+                  },
+                ],
+              }),
+            });
+
+            const [nftResponse, transferResponse] = await Promise.all([nftRequest, transferRequest]);
+
+            const nftData = await nftResponse.json();
+            const transferData = await transferResponse.json();
+
+            const responseData = {
+              nfts: nftData,
+              transfers: transferData,
+            };
+
+            sendResponse({
+              type: 'RequestInitialDragGPTStream',
+              data: {
+                result: responseData,
+                isDone: true,
+              },
+            });
+          } catch (error) {
+            Logger.warn(error);
+            sendErrorMessageToClient(port, error);
+          }
           break;
         }
+
         case 'RequestOnetimeChatGPT': {
           const selectedSlot = await SlotStorage.getSelectedSlot();
           const apiKey = await ApiKeyStorage.getApiKey();

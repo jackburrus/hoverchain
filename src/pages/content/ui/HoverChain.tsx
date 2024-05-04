@@ -8,6 +8,8 @@ import DataRequestButton from './components/DataRequestButton';
 import DataResponseBox from './components/DataResponseBox';
 import { sendMessageToBackground } from '../../chrome/message';
 import DataLoadingBox from './components/DataLoadingBox';
+import { formatEther } from 'viem';
+import { Utils } from 'alchemy-sdk';
 const skipLoopCycleOnce = async () => await delayPromise(1);
 
 export default function HoverChain() {
@@ -68,6 +70,7 @@ export default function HoverChain() {
       },
       handleSuccess: response => {
         if (response.isDone) {
+          console.log('response.result', response.result);
           if (!dataToDisplay) {
             setDataToDisplay([response.result]);
           }
@@ -81,7 +84,7 @@ export default function HoverChain() {
   }
 
   useEffect(() => {
-    console.log(dataToDisplay, 'dataToDisplay');
+    console.log('dataToDisplay', dataToDisplay);
   }, [dataToDisplay]);
 
   return (

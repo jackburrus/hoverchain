@@ -126,6 +126,7 @@ chrome.runtime.onConnect.addListener(port => {
             const transferData = await transferResponse.json();
 
             const responseData = {
+              originalAddress: { address: message.input },
               nfts: nftData,
               transfers: transferData,
             };

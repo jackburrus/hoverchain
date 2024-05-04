@@ -10,6 +10,7 @@ import { sendMessageToBackground } from '../../chrome/message';
 import DataLoadingBox from './components/DataLoadingBox';
 import { formatEther } from 'viem';
 import { Utils } from 'alchemy-sdk';
+import FontProvider from '@root/src/shared/component/FontProvider';
 const skipLoopCycleOnce = async () => await delayPromise(1);
 
 export default function HoverChain() {
@@ -84,39 +85,41 @@ export default function HoverChain() {
   }
 
   return (
-    <>
-      {state.hasTag('showRequestButton') && (
-        <DataRequestButton
-          onClick={requestAlchemy}
-          loading={state.matches('loading')}
-          top={state.context.requestButtonPosition.top}
-          left={state.context.requestButtonPosition.left}
-        />
-      )}
-      {state.matches('temp_response_message_box') && (
-        <DataLoadingBox
-          content={'Hello World!'}
-          width={400}
-          isOutsideClickDisabled={true}
-          onClose={() => send('RECEIVE_CANCEL')}
-          anchorTop={state.context.anchorNodePosition.top}
-          anchorCenter={state.context.anchorNodePosition.center}
-          anchorBottom={state.context.anchorNodePosition.bottom}
-          positionOnScreen={state.context.positionOnScreen}
-        />
-      )}
-      {state.matches('response_message_box') && dataToDisplay[0] && (
-        <DataResponseBox
-          content={dataToDisplay[0]}
-          width={400}
-          isOutsideClickDisabled={true}
-          onClose={() => send('RECEIVE_CANCEL')}
-          anchorTop={state.context.anchorNodePosition.top}
-          anchorCenter={state.context.anchorNodePosition.center}
-          anchorBottom={state.context.anchorNodePosition.bottom}
-          positionOnScreen={state.context.positionOnScreen}
-        />
-      )}
-    </>
+    <FontProvider>
+      <div style={{ fontFamily: 'Press Start 2P' }}>
+        {state.hasTag('showRequestButton') && (
+          <DataRequestButton
+            onClick={requestAlchemy}
+            loading={state.matches('loading')}
+            top={state.context.requestButtonPosition.top}
+            left={state.context.requestButtonPosition.left}
+          />
+        )}
+        {state.matches('temp_response_message_box') && (
+          <DataLoadingBox
+            content={'Hello World!'}
+            width={400}
+            isOutsideClickDisabled={true}
+            onClose={() => send('RECEIVE_CANCEL')}
+            anchorTop={state.context.anchorNodePosition.top}
+            anchorCenter={state.context.anchorNodePosition.center}
+            anchorBottom={state.context.anchorNodePosition.bottom}
+            positionOnScreen={state.context.positionOnScreen}
+          />
+        )}
+        {state.matches('response_message_box') && dataToDisplay[0] && (
+          <DataResponseBox
+            content={dataToDisplay[0]}
+            width={400}
+            isOutsideClickDisabled={true}
+            onClose={() => send('RECEIVE_CANCEL')}
+            anchorTop={state.context.anchorNodePosition.top}
+            anchorCenter={state.context.anchorNodePosition.center}
+            anchorBottom={state.context.anchorNodePosition.bottom}
+            positionOnScreen={state.context.positionOnScreen}
+          />
+        )}
+      </div>
+    </FontProvider>
   );
 }

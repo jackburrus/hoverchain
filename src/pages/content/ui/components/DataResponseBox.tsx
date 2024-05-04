@@ -1,6 +1,8 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { PositionOnScreen } from '../utils/getPositionOnScreen';
 import UserInformation from './UserInformation';
+import NFTList from './NFTList';
+import TransferList from './TransferList';
 
 export type MessageBoxProps = {
   isOutsideClickDisabled?: boolean;
@@ -28,7 +30,8 @@ export default function DataResponseBox({
   isOutsideClickDisabled,
   ...restProps
 }: MessageBoxProps) {
-  console.log(content, 'content');
+  const [activeTab, setActiveTab] = useState('nfts'); // Initial state for tabs
+
   return (
     <div
       style={{
@@ -36,9 +39,9 @@ export default function DataResponseBox({
         top: anchorTop,
         left: positionOnScreen === 'topLeft' ? anchorCenter - width : anchorCenter,
         width: width,
-        backgroundColor: '#c0c0c0', // Classic gray background
-        border: '2px solid black', // Solid black border
-        borderRadius: 0, // No rounded corners
+        backgroundColor: '#c0c0c0',
+        border: '2px solid black',
+        borderRadius: 0,
         zIndex: 1000,
       }}
       {...restProps}>
@@ -48,10 +51,8 @@ export default function DataResponseBox({
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '5px 10px',
-          backgroundColor: '#000080', // Dark blue header
-          color: 'white', // White text for contrast
-          borderTopLeftRadius: 0,
-          borderTopRightRadius: 0,
+          backgroundColor: '#000080',
+          color: 'white',
         }}>
         {header}
         <button
@@ -60,10 +61,25 @@ export default function DataResponseBox({
           X
         </button>
       </div>
-      <div className="flex flex-col" style={{ padding: '10px', fontFamily: 'Courier', fontSize: '12px' }}>
-        <UserInformation content={content} />
+      <UserInformation content={content} />
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0' }}>
+        <button
+          onClick={() => setActiveTab('nfts')}
+          className={activeTab === 'nfts' ? 'underline' : 'normal'}
+          style={{ marginRight: 20, fontWeight: activeTab === 'nfts' ? 'bold underline' : 'normal' }}>
+          NFTs
+        </button>
+        <button
+          onClick={() => setActiveTab('transfers')}
+          className={activeTab === 'transfers' ? 'underline' : 'normal'}
+          style={{ fontWeight: activeTab === 'transfers' ? 'bold underline' : 'normal' }}>
+          Transfers
+        </button>
       </div>
-      {footer && <div style={{ padding: '10px', borderTop: '1px solid black' }}>{footer}</div>}
+      <div style={{ padding: '10px', fontFamily: 'Courier', fontSize: '12px' }}>
+        {activeTab === 'nfts' ? <NFTList content={content} /> : <TransferList content={content} />}
+      </div>
+      {footer && <div style={{ borderTop: '1px solid black', padding: '10px' }}>{footer}</div>}
     </div>
   );
 }

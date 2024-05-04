@@ -94,7 +94,7 @@ chrome.runtime.onConnect.addListener(port => {
           const body = {
             id: 1,
             jsonrpc: '2.0',
-            method: 'eth_blockNumber',
+            method: 'eth_gasPrice',
           };
           const headers = {
             'Content-Type': 'application/json',
@@ -106,19 +106,6 @@ chrome.runtime.onConnect.addListener(port => {
           });
           const result = await response.json();
 
-          const res = await chatGPT({
-            input: message.input,
-            apiKey,
-            onDelta: chunk => {
-              sendResponse({
-                type: 'RequestInitialDragGPTStream',
-                data: {
-                  result,
-                  chunk,
-                },
-              });
-            },
-          });
           sendResponse({
             type: 'RequestInitialDragGPTStream',
             data: {

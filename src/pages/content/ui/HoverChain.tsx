@@ -3,30 +3,15 @@ import { getPositionOnScreen } from './utils/getPositionOnScreen';
 import { getSelectionNodeRect, getSelectionText } from '@pages/content/ui/utils/selection';
 import dragStateMachine from './xState/dragStateMachine';
 import delayPromise from './utils/delayPromise';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import DataRequestButton from './components/DataRequestButton';
 import DataResponseBox from './components/DataResponseBox';
 import { sendMessageToBackground } from '../../chrome/message';
+import DataLoadingBox from './components/DataLoadingBox';
 const skipLoopCycleOnce = async () => await delayPromise(1);
 
-async function getAlchemyResponseAsStream({ input, onFinish }: { input: string; onFinish: (result: string) => void }) {
-  sendMessageToBackground({
-    message: {
-      type: 'RequestInitialDragGPTStream',
-      input,
-    },
-    handleSuccess: response => {
-      if (response.isDone) {
-        return onFinish(response.result);
-      }
-      // resolve({ firstChunk: response.chunk });
-      // onDelta(response.chunk);
-    },
-    // handleError: reject,
-  });
-}
-
 export default function HoverChain() {
+  const [dataToDisplay, setDataToDisplay] = useState<any[]>(undefined);
   const [state, send] = useMachine(dragStateMachine, {
     actions: {
       setPositionOnScreen: context => {
@@ -69,7 +54,35 @@ export default function HoverChain() {
     send('REQUEST');
   };
 
-  console.log(state, 'this is the current state');
+  async function getAlchemyResponseAsStream({
+    input,
+    onFinish,
+  }: {
+    input: string;
+    onFinish: (result: string) => void;
+  }) {
+    sendMessageToBackground({
+      message: {
+        type: 'RequestInitialDragGPTStream',
+        input,
+      },
+      handleSuccess: response => {
+        if (response.isDone) {
+          if (!dataToDisplay) {
+            setDataToDisplay([response.result]);
+          }
+          return onFinish(response.result);
+        }
+        // resolve({ firstChunk: response.chunk });
+        // onDelta(response.chunk);
+      },
+      // handleError: reject,
+    });
+  }
+
+  useEffect(() => {
+    console.log(dataToDisplay, 'dataToDisplay');
+  }, [dataToDisplay]);
 
   return (
     <>
@@ -82,7 +95,7 @@ export default function HoverChain() {
         />
       )}
       {state.matches('temp_response_message_box') && (
-        <DataResponseBox
+        <DataLoadingBox
           content={'Hello World!'}
           width={200}
           isOutsideClickDisabled={true}

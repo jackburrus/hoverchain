@@ -83,7 +83,7 @@ export default function HoverChain() {
       // handleError: reject,
     });
   }
-
+  console.log(dataToDisplay, 'data to display');
   return (
     <FontProvider>
       <div style={{ fontFamily: 'Press Start 2P' }}>
@@ -110,6 +110,7 @@ export default function HoverChain() {
         {state.matches('response_message_box') && dataToDisplay[0] && (
           <DataResponseBox
             content={dataToDisplay[0]}
+            isContract={dataToDisplay[0]?.mantleData}
             width={400}
             isOutsideClickDisabled={true}
             onClose={() => send('RECEIVE_CANCEL')}

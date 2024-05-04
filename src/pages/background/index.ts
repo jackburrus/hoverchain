@@ -91,13 +91,17 @@ chrome.runtime.onConnect.addListener(port => {
           try {
             const apiKey = await ApiKeyStorage.getApiKey();
 
+            // Define the API URLs
             const nftUrl = `https://eth-mainnet.g.alchemy.com/nft/v2/${apiKey}/getNFTs?owner=${message.input}&withMetadata=true&pageSize=100`;
             const transferUrl = `https://eth-mainnet.g.alchemy.com/v2/${apiKey}`;
+            const mantleExplorerUrl = `https://explorer.sepolia.mantle.xyz/api/v2/smart-contracts/${message.input}`;
 
             const headers = {
               'Content-Type': 'application/json',
             };
 
+            // Perform API requests
+            const mantleExplorerRequest = fetch(mantleExplorerUrl, { method: 'GET', headers });
             const nftRequest = fetch(nftUrl, { method: 'GET' });
             const transferRequest = fetch(transferUrl, {
               headers,
@@ -120,27 +124,50 @@ chrome.runtime.onConnect.addListener(port => {
               }),
             });
 
-            const [nftResponse, transferResponse] = await Promise.all([nftRequest, transferRequest]);
+            // handle them one at a time
+            const mantleResponse = await mantleExplorerRequest;
+            const nftResponse = await nftRequest;
+            const transferResponse = await transferRequest;
 
-            const nftData = await nftResponse.json();
-            const transferData = await transferResponse.json();
+            const mantleData = await mantleResponse.json();
 
-            const responseData = {
-              originalAddress: { address: message.input },
-              nfts: nftData,
-              transfers: transferData,
-            };
+            if (mantleResponse.status === 404) {
+              // Handle if it's a wallet
+              const nftData = await nftResponse.json();
+              const transferData = await transferResponse.json();
 
-            sendResponse({
-              type: 'RequestInitialDragGPTStream',
-              data: {
-                result: responseData,
-                isDone: true,
-              },
-            });
+              const walletResponseData = {
+                originalAddress: { address: message.input },
+                nfts: nftData,
+                transfers: transferData,
+              };
+
+              sendResponse({
+                type: 'RequestInitialDragGPTStream',
+                data: {
+                  result: walletResponseData,
+                  isDone: true,
+                },
+              });
+            } else {
+              // Handle if it's a contract
+              const contractResponseData = {
+                originalAddress: { address: message.input },
+                mantleData,
+              };
+
+              sendResponse({
+                type: 'RequestInitialDragGPTStream',
+                data: {
+                  result: contractResponseData,
+                  isDone: true,
+                },
+              });
+            }
           } catch (error) {
+            console.log('Catched error in RequestInitialDragGPTStream', error);
             Logger.warn(error);
-            sendErrorMessageToClient(port, error);
+            sendErrorMessageToClient(port, error.message || 'An error occurred');
           }
           break;
         }

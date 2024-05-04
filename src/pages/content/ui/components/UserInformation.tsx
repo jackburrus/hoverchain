@@ -24,7 +24,7 @@ export default function UserInformation({ content }) {
   );
 }
 
-function formatEthereumAddress(address: string): string {
+export function formatEthereumAddress(address: string): string {
   if (!address || address.length < 5) {
     throw new Error('Invalid address');
   }

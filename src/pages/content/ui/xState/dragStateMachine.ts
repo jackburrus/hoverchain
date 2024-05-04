@@ -34,7 +34,7 @@ interface Context {
 }
 
 type Services = {
-  getGPTResponse: {
+  getAlchemyResponse: {
     data: { firstChunk: string };
   };
 };

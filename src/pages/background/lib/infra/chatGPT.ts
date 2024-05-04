@@ -9,12 +9,10 @@ type Error = {
 };
 export async function chatGPT({
   input,
-  slot,
   chats,
   apiKey,
   onDelta,
 }: {
-  slot: ChatGPTSlot;
   chats?: Chat[];
   input?: string;
   apiKey: string;
@@ -22,12 +20,6 @@ export async function chatGPT({
 }): Promise<{ result: string }> {
   const messages: ChatCompletionRequestMessage[] = [];
 
-  if (slot.system) {
-    messages.push({
-      role: 'system',
-      content: slot.system,
-    });
-  }
   if (hasChats(chats)) {
     messages.push(...convertChatsToMessages(chats));
   }

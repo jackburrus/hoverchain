@@ -105,27 +105,25 @@ chrome.runtime.onConnect.addListener(port => {
             body: JSON.stringify(body),
           });
           const result = await response.json();
-          console.log(result, 'result from Alchemy??');
 
-          // const response = await chatGPT({
-          //   input: message.input,
-          //   slot,
-          //   apiKey,
-          //   onDelta: chunk => {
-          //     sendResponse({
-          //       type: 'RequestInitialDragGPTStream',
-          //       data: {
-          //         result: '',
-          //         chunk,
-          //       },
-          //     });
-          //   },
-          // });
+          const res = await chatGPT({
+            input: message.input,
+            apiKey,
+            onDelta: chunk => {
+              sendResponse({
+                type: 'RequestInitialDragGPTStream',
+                data: {
+                  result,
+                  chunk,
+                },
+              });
+            },
+          });
           sendResponse({
             type: 'RequestInitialDragGPTStream',
             data: {
               isDone: true,
-              result: response.result,
+              result,
             },
           });
           break;

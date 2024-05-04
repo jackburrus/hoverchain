@@ -17,7 +17,7 @@ async function getAlchemyResponseAsStream({ input, onFinish }: { input: string; 
         input,
       },
       handleSuccess: response => {
-        if (response.isDone || !response.chunk) {
+        if (response.isDone) {
           return onFinish(response.result);
         }
         resolve({ firstChunk: response.chunk });
@@ -39,14 +39,13 @@ export default function HoverChain() {
           horizontalCenter,
           verticalCenter,
         });
-        console.log(context.positionOnScreen, 'positionOnScreen');
       },
     },
     services: {
-      getAlchemyResponse: context => getAlchemyResponseAsStream({ input: context.selectedText, onFinish: console.log }),
+      getAlchemyResponse: context =>
+        getAlchemyResponseAsStream({ input: context.selectedText, onFinish: () => send('RECEIVE_END') }),
     },
   });
-  console.log('state', state);
   useEffect(() => {
     const onMouseUp = async (event: MouseEvent) => {
       /** Selection 이벤트 호출을 기다리는 해키한 코드 */

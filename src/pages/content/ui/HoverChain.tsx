@@ -10,21 +10,19 @@ import { sendMessageToBackground } from '../../chrome/message';
 const skipLoopCycleOnce = async () => await delayPromise(1);
 
 async function getAlchemyResponseAsStream({ input, onFinish }: { input: string; onFinish: (result: string) => void }) {
-  return new Promise((resolve, reject) => {
-    sendMessageToBackground({
-      message: {
-        type: 'RequestInitialDragGPTStream',
-        input,
-      },
-      handleSuccess: response => {
-        if (response.isDone) {
-          return onFinish(response.result);
-        }
-        resolve({ firstChunk: response.chunk });
-        // onDelta(response.chunk);
-      },
-      handleError: reject,
-    });
+  sendMessageToBackground({
+    message: {
+      type: 'RequestInitialDragGPTStream',
+      input,
+    },
+    handleSuccess: response => {
+      if (response.isDone) {
+        return onFinish(response.result);
+      }
+      // resolve({ firstChunk: response.chunk });
+      // onDelta(response.chunk);
+    },
+    // handleError: reject,
   });
 }
 
@@ -71,7 +69,6 @@ export default function HoverChain() {
     send('REQUEST');
   };
 
-  console.log('This is the current state,', state);
   return (
     <>
       {state.hasTag('showRequestButton') && (
@@ -85,6 +82,18 @@ export default function HoverChain() {
       {state.matches('temp_response_message_box') && (
         <DataResponseBox
           content={'Hello World!'}
+          width={200}
+          isOutsideClickDisabled={true}
+          onClose={() => send('RECEIVE_CANCEL')}
+          anchorTop={state.context.anchorNodePosition.top}
+          anchorCenter={state.context.anchorNodePosition.center}
+          anchorBottom={state.context.anchorNodePosition.bottom}
+          positionOnScreen={state.context.positionOnScreen}
+        />
+      )}
+      {state.matches('response_message_box') && (
+        <DataResponseBox
+          content={'Hello World of messages'}
           width={200}
           isOutsideClickDisabled={true}
           onClose={() => send('RECEIVE_CANCEL')}

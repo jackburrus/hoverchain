@@ -148,7 +148,12 @@ const dragStateMachine = createMachine(
         requestButtonPosition: (_, event) => event.data.requestButtonPosition,
       }),
       addRequestChat: assign({
-        chats: context => context.chats.concat({ role: 'user', content: context.selectedText }),
+        chats: context => {
+          return context.chats.concat({
+            role: 'user',
+            content: context.selectedText,
+          });
+        },
       }),
       addInitialResponseChat: assign({
         chats: (context, event) => {

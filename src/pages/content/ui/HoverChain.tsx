@@ -83,10 +83,6 @@ export default function HoverChain() {
     });
   }
 
-  useEffect(() => {
-    console.log('dataToDisplay', dataToDisplay);
-  }, [dataToDisplay]);
-
   return (
     <>
       {state.hasTag('showRequestButton') && (
@@ -100,7 +96,7 @@ export default function HoverChain() {
       {state.matches('temp_response_message_box') && (
         <DataLoadingBox
           content={'Hello World!'}
-          width={200}
+          width={400}
           isOutsideClickDisabled={true}
           onClose={() => send('RECEIVE_CANCEL')}
           anchorTop={state.context.anchorNodePosition.top}
@@ -109,10 +105,10 @@ export default function HoverChain() {
           positionOnScreen={state.context.positionOnScreen}
         />
       )}
-      {state.matches('response_message_box') && (
+      {state.matches('response_message_box') && dataToDisplay[0] && (
         <DataResponseBox
-          content={'Hello World of messages'}
-          width={200}
+          content={dataToDisplay[0]}
+          width={400}
           isOutsideClickDisabled={true}
           onClose={() => send('RECEIVE_CANCEL')}
           anchorTop={state.context.anchorNodePosition.top}

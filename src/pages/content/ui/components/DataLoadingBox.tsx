@@ -1,5 +1,10 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { PositionOnScreen } from '../utils/getPositionOnScreen';
+import Noun1 from './nouns/Noun1';
+import Noun2 from './nouns/Noun2';
+import Noun3 from './nouns/Noun3';
+import Noun4 from './nouns/Noun4';
+import Noun5 from './nouns/Noun5';
 
 export type MessageBoxProps = {
   isOutsideClickDisabled?: boolean;
@@ -14,6 +19,8 @@ export type MessageBoxProps = {
   positionOnScreen: PositionOnScreen;
 } & ComponentPropsWithRef<'div'>;
 
+const nounImages = [<Noun1 />, <Noun2 />, <Noun3 />, <Noun4 />, <Noun5 />];
+
 export default function DataLoadingBox({
   anchorCenter,
   anchorTop,
@@ -27,16 +34,27 @@ export default function DataLoadingBox({
   isOutsideClickDisabled,
   ...restProps
 }: MessageBoxProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex(prevIndex => (prevIndex + 1) % nounImages.length);
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div
+      className="p-10"
       style={{
         position: 'absolute',
         top: anchorTop,
         left: positionOnScreen === 'topLeft' ? anchorCenter - width : anchorCenter,
         width: width,
-        backgroundColor: 'white',
-        boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.75)',
-        borderRadius: 5,
+        backgroundColor: '#c0c0c0', // Classic gray background
+        border: '2px solid black', // Solid black border
+        borderRadius: 0, // No rounded corners
         zIndex: 1000,
       }}
       {...restProps}>
@@ -46,15 +64,21 @@ export default function DataLoadingBox({
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '5px 10px',
-          backgroundColor: 'lightgray',
-          borderTopLeftRadius: 5,
-          borderTopRightRadius: 5,
+          backgroundColor: '#000080', // Dark blue header
+          color: 'white', // White text for contrast
         }}>
         {header}
-        <button onClick={onClose}>X</button>
+        <button
+          style={{ color: 'white', fontWeight: 'bold', backgroundColor: 'transparent', border: 'none' }}
+          onClick={onClose}>
+          X
+        </button>
       </div>
-      <div style={{ padding: '10px' }}>{content}</div>
-      {footer && <div style={{ padding: '10px' }}>{footer}</div>}
+      <div style={{ color: 'black', fontFamily: 'System', fontSize: '14px', textAlign: 'center', marginTop: '10px' }}>
+        <h1>Loading...</h1>
+        {nounImages[currentIndex]}
+      </div>
+      {footer && <div style={{ borderTop: '1px solid black', padding: '10px' }}>{footer}</div>}
     </div>
   );
 }

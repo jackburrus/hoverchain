@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { PositionOnScreen } from '../utils/getPositionOnScreen';
+import UserInformation from './UserInformation';
 
 export type MessageBoxProps = {
   isOutsideClickDisabled?: boolean;
@@ -27,6 +28,7 @@ export default function DataResponseBox({
   isOutsideClickDisabled,
   ...restProps
 }: MessageBoxProps) {
+  console.log(content, 'content');
   return (
     <div
       style={{
@@ -34,9 +36,9 @@ export default function DataResponseBox({
         top: anchorTop,
         left: positionOnScreen === 'topLeft' ? anchorCenter - width : anchorCenter,
         width: width,
-        backgroundColor: 'white',
-        boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.75)',
-        borderRadius: 5,
+        backgroundColor: '#c0c0c0', // Classic gray background
+        border: '2px solid black', // Solid black border
+        borderRadius: 0, // No rounded corners
         zIndex: 1000,
       }}
       {...restProps}>
@@ -46,15 +48,22 @@ export default function DataResponseBox({
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '5px 10px',
-          backgroundColor: 'lightgray',
-          borderTopLeftRadius: 5,
-          borderTopRightRadius: 5,
+          backgroundColor: '#000080', // Dark blue header
+          color: 'white', // White text for contrast
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
         }}>
         {header}
-        <button onClick={onClose}>X</button>
+        <button
+          style={{ color: 'white', fontWeight: 'bold', backgroundColor: 'transparent', border: 'none' }}
+          onClick={onClose}>
+          X
+        </button>
       </div>
-      <div style={{ padding: '10px' }}>{content}</div>
-      {footer && <div style={{ padding: '10px' }}>{footer}</div>}
+      <div className="flex flex-col" style={{ padding: '10px', fontFamily: 'Courier', fontSize: '12px' }}>
+        <UserInformation content={content} />
+      </div>
+      {footer && <div style={{ padding: '10px', borderTop: '1px solid black' }}>{footer}</div>}
     </div>
   );
 }
